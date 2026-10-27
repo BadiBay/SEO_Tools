@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  parser-api:
+    build: .
+    container_name: seo_parser_microservice
+    ports:
+      - "8000:8000"
+    environment:
+      - TZ=Europe/Moscow
+    dns:
+      - 8.8.8.8
+      - 77.88.8.8
+      - 1.1.1.1
+    restart: unless-stopped
+    shm_size: '2g'
+    volumes:
+      - ./app/data:/app/app/data
+      - ./app/static/screenshots:/app/app/static/screenshots

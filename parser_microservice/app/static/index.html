@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Parser Dashboard</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css?v=3">
+</head>
+<body>
+    <div class="background-mesh"></div>
+    
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="logo">
+                <div class="logo-icon">🚀</div>
+                <h2>SEO Parser</h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-target="module-projects">
+                    <span class="icon">📁</span> Проекты
+                </button>
+                <button class="nav-btn" data-target="module-1">
+                    <span class="icon">📊</span> Базовый парсинг
+                </button>
+                <button class="nav-btn" data-target="module-2">
+                    <span class="icon">🔔</span> Мониторинг отзывов
+                </button>
+                <div class="nav-group">
+                    <button class="nav-btn nav-group-toggle" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span class="icon">⚔️</span> Анализ конкурентов
+                        <span class="chevron" style="margin-left:auto; font-size: 0.8em; transition: transform 0.3s;">▼</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <button class="nav-btn sub-nav-btn" data-target="module-3">Новый анализ</button>
+                        <button class="nav-btn sub-nav-btn" data-target="module-competitor-history">История</button>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button class="nav-btn nav-group-toggle" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span class="icon">🔎</span> Репутация
+                        <span class="chevron" style="margin-left:auto; font-size: 0.8em; transition: transform 0.3s;">▼</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <button class="nav-btn sub-nav-btn" data-target="module-4">Новый поиск</button>
+                        <button class="nav-btn sub-nav-btn" data-target="module-history">История</button>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button class="nav-btn nav-group-toggle" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span class="icon">🌐</span> Упоминания
+                        <span class="chevron" style="margin-left:auto; font-size: 0.8em; transition: transform 0.3s;">▼</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <button class="nav-btn sub-nav-btn" data-target="module-mentions">Новый поиск</button>
+                        <button class="nav-btn sub-nav-btn" data-target="module-mentions-history">История</button>
+                    </div>
+                </div>
+                <div class="nav-group">
+                    <button class="nav-btn nav-group-toggle" onclick="this.parentElement.classList.toggle('expanded')">
+                        <span class="icon">👎</span> Поиск негатива
+                        <span class="chevron" style="margin-left:auto; font-size: 0.8em; transition: transform 0.3s;">▼</span>
+                    </button>
+                    <div class="nav-sub-menu">
+                        <button class="nav-btn sub-nav-btn" data-target="module-negative">Новый поиск</button>
+                        <button class="nav-btn sub-nav-btn" data-target="module-negative-history">История</button>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- MODULE PROJECTS: Управление проектами -->
+            <section id="module-projects" class="module-section active">
+                <header class="section-header">
+                    <h1>Мои проекты</h1>
+                    <p>Сохраняйте ссылки на карточки ваших организаций и проверяйте их в один клик.</p>
+                </header>
+                
+                <div class="projects-container">
+                    <div class="projects-sidebar glass-panel">
+                        <div class="projects-sidebar-header">
+                            <h3>Мои проекты</h3>
+                            <button id="btn-create-project" class="primary-btn" style="margin-top:0; padding: 0.5rem 1rem;">+ Новый</button>
+                        </div>
+                        <ul id="projects-list" class="projects-list">
+                            <!-- Список проектов генерируется через JS -->
+                        </ul>
+                    </div>
+                    
+                    <div id="project-details" class="project-details glass-panel hidden">
+                        <div class="project-header">
+                            <h2 id="pd-name">Название проекта</h2>
+                            <button id="btn-scan-project" class="primary-btn" style="margin-top:0; background: var(--success);">🔍 Проверить все сразу</button>
+                            <button id="btn-delete-project" class="primary-btn" style="margin-top:0; background: var(--error);">Удалить</button>
+                        </div>
+                        
+                        <div class="project-links">
+                            <h3>Ссылки проекта</h3>
+                            <div class="add-link-form">
+                                <input type="url" id="new-link-url" placeholder="https://yandex.ru/maps/..." style="flex:1;">
+                                <button id="btn-add-link" class="primary-btn" style="margin-top:0;">Добавить</button>
+                            </div>
+                            <ul id="project-links-list" class="links-list">
+                                <!-- Список ссылок генерируется через JS -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE 1: Базовый парсинг -->
+            <section id="module-1" class="module-section">
+                <header class="section-header">
+                    <h1>Базовый парсинг карточки</h1>
+                    <p>Сбор рейтинга и количества оценок по прямому URL организации.</p>
+                </header>
+                <div class="form-panel glass-panel">
+                    <form id="form-mod1" class="api-form">
+                        <div class="input-group">
+                            <label>Быстрый выбор из проектов</label>
+                            <select class="project-link-selector" data-target-url="mod1-url" data-target-platform="mod1-platform">
+                                <option value="">-- Ввести вручную --</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Платформа</label>
+                            <select id="mod1-platform">
+                                <option value="yandex">Яндекс Карты</option>
+                                <option value="twogis">2GIS</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Ссылка на организацию</label>
+                            <input type="url" id="mod1-url" required placeholder="https://yandex.ru/maps/org/... или https://2gis.ru/...">
+                        </div>
+                        <button type="submit" class="primary-btn">Собрать данные</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MODULE 2: Мониторинг отзывов -->
+            <section id="module-2" class="module-section">
+                <header class="section-header">
+                    <h1>Мониторинг отзывов</h1>
+                    <p>Сбор новых отзывов, появившихся после указанной даты.</p>
+                </header>
+                
+                <div class="form-panel glass-panel">
+                    <form id="form-mod2">
+                        <div class="input-group">
+                            <label>Быстрый выбор из проектов</label>
+                            <select class="project-link-selector" data-target-url="mod2-url" data-target-platform="mod2-platform">
+                                <option value="">-- Ввести вручную --</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Платформа</label>
+                            <select id="mod2-platform">
+                                <option value="yandex">Яндекс Карты</option>
+                                <option value="twogis">2GIS</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod2-url">URL карточки организации</label>
+                            <input type="url" id="mod2-url" placeholder="https://yandex.ru/... или https://2gis.ru/..." required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod2-date">Дата прошлой проверки</label>
+                            <input type="datetime-local" id="mod2-date" required>
+                        </div>
+                        <button type="submit" class="primary-btn">Запустить мониторинг</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MODULE 3: Конкурентный анализ -->
+            <section id="module-3" class="module-section">
+                <header class="section-header">
+                    <h1>Конкурентный анализ + Реклама</h1>
+                    <p>Поиск конкурентов в радиусе, сбор их отзывов и проверка на использование рекламы.</p>
+                </header>
+                
+                <div class="form-panel glass-panel">
+                    <form id="form-mod3">
+                        <div class="input-group">
+                            <label>Быстрый выбор из проектов</label>
+                            <select class="project-link-selector" data-target-url="mod3-url" data-target-platform="mod3-platform">
+                                <option value="">-- Ввести вручную --</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label>Платформа</label>
+                            <select id="mod3-platform">
+                                <option value="yandex">Яндекс Карты</option>
+                                <option value="twogis">2GIS</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod3-url">Ссылка на организацию (откуда начать поиск)</label>
+                            <input type="url" id="mod3-url" placeholder="https://yandex.ru/... или https://2gis.ru/..." required>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="mod3-radius">Радиус (в метрах) [Только для Яндекса]</label>
+                                <input type="number" id="mod3-radius" value="1000" required>
+                            </div>
+                            <div class="input-group">
+                                <label for="mod3-limit">Лимит конкурентов</label>
+                                <input type="number" id="mod3-limit" value="3" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod3-query">Поисковый запрос</label>
+                            <input type="text" id="mod3-query" placeholder="кофейня, салон красоты..." required>
+                        </div>
+                        <button type="submit" class="primary-btn">Запустить анализ</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MODULE 4: Поиск репутации -->
+            <section id="module-4" class="module-section">
+                <header class="section-header">
+                    <h1>Поиск репутации</h1>
+                    <p>Введите данные компании. Алгоритм автоматически сформирует поисковой запрос, найдет вашу компанию в Яндексе и соберет оценки с 30 топ-площадок.</p>
+                </header>
+                
+                <div class="form-panel glass-panel">
+                    <form id="form-mod4">
+                        <div class="input-group">
+                            <label for="mod4-project">Проект</label>
+                            <select id="mod4-project">
+                                <option value="new">Новый проект (сохранить)</option>
+                            </select>
+                        </div>
+                        <div class="input-group" id="mod4-project-name-group">
+                            <label for="mod4-project-name">Название нового проекта</label>
+                            <input type="text" id="mod4-project-name" placeholder="Например: Мой проект" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod4-company">Название компании (Например: "Весна")</label>
+                            <input type="text" id="mod4-company" placeholder="Весна" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod4-direction">Основное направление (Например: "Стоматология")</label>
+                            <input type="text" id="mod4-direction" placeholder="Стоматология" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod4-city">Город (Например: "Санкт-Петербург")</label>
+                            <input type="text" id="mod4-city" placeholder="Санкт-Петербург" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mod4-address">Адрес / Улица (Необязательно)</label>
+                            <input type="text" id="mod4-address" placeholder="Например: Искровский проспект">
+                        </div>
+                        <div class="input-group">
+                            <label for="mod4-website">Сайт (Необязательно, для точности поиска)</label>
+                            <input type="text" id="mod4-website" placeholder="Например: vesna-spb.ru">
+                        </div>
+                        <button type="submit" class="primary-btn">Запустить поиск</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MODULE HISTORY: История поиска -->
+            <section id="module-history" class="module-section">
+                <header class="section-header">
+                    <h1>История поиска репутации</h1>
+                    <p>Просмотр ранее выполненных запросов.</p>
+                </header>
+                
+                <div class="history-container glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Сохраненные отчеты</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="https://docs.google.com/spreadsheets/d/1udoJEPFfP-4u_vaZv8jCwtetRDAMq3cKzYC9TR9BHu0/edit" target="_blank" class="primary-btn" style="margin: 0; padding: 0.5rem 1rem; text-decoration: none; background: var(--success); color: white; display: inline-flex; align-items: center; gap: 0.4rem;">📊 Открыть таблицу</a>
+                            <button id="btn-load-history" class="primary-btn" style="margin: 0; padding: 0.5rem 1rem; display: inline-flex; align-items: center; gap: 0.4rem;">🔄 Обновить</button>
+                        </div>
+                    </div>
+                    <div id="history-list">
+                        <p class="empty-state" style="color: var(--text-muted);">Загрузка истории...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE COMPETITOR HISTORY: История конкурентов -->
+            <section id="module-competitor-history" class="module-section">
+                <header class="section-header">
+                    <h1>История анализа конкурентов</h1>
+                    <p>Просмотр ранее выполненных анализов конкурентов.</p>
+                </header>
+                
+                <div class="history-container glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Сохраненные отчеты</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <a href="https://docs.google.com/spreadsheets/d/1eng4RIv-4QN4Da2tnpif2q1p83zTfkNdgLYPsoYZBnk/edit" target="_blank" class="primary-btn" style="margin: 0; padding: 0.5rem 1rem; text-decoration: none; background: var(--success); color: white; display: inline-flex; align-items: center; gap: 0.4rem;">📊 Открыть таблицу</a>
+                            <button id="btn-load-competitor-history" class="primary-btn" style="margin: 0; padding: 0.5rem 1rem; display: inline-flex; align-items: center; gap: 0.4rem;">🔄 Обновить</button>
+                        </div>
+                    </div>
+                    <div id="competitor-history-list">
+                        <p class="empty-state" style="color: var(--text-muted);">Загрузка истории...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE MENTIONS: Поиск упоминаний -->
+            <section id="module-mentions" class="module-section">
+                <header class="section-header">
+                    <h1>Поиск упоминаний</h1>
+                    <p>Введите данные компании и домен. Алгоритм проанализирует топ-30 страниц на наличие вашей ссылки.</p>
+                </header>
+                
+                <div class="form-panel glass-panel">
+                    <form id="form-mentions">
+                        <div class="input-group">
+                            <label for="mentions-company">Название компании</label>
+                            <input type="text" id="mentions-company" placeholder="Весна" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mentions-website">Ссылка на сайт компании</label>
+                            <input type="text" id="mentions-website" placeholder="vesna-spb.ru" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="mentions-city">Город (опционально)</label>
+                            <input type="text" id="mentions-city" placeholder="Санкт-Петербург">
+                        </div>
+                        <button type="submit" class="primary-btn">Запустить поиск</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MODULE MENTIONS HISTORY: История упоминаний -->
+            <section id="module-mentions-history" class="module-section">
+                <header class="section-header">
+                    <h1>История поиска упоминаний</h1>
+                    <p>Просмотр ранее выполненных запросов на упоминания.</p>
+                </header>
+                
+                <div class="history-container glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Сохраненные отчеты</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button id="btn-load-mentions-history" class="primary-btn" style="margin: 0; padding: 0.5rem 1rem; display: inline-flex; align-items: center; gap: 0.4rem;">🔄 Обновить</button>
+                        </div>
+                    </div>
+                    <div id="mentions-history-list">
+                        <p class="empty-state" style="color: var(--text-muted);">Загрузка истории...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MODULE NEGATIVE: Поиск негатива -->
+            <section id="module-negative" class="module-section">
+                <header class="section-header">
+                    <h1>Поиск негатива</h1>
+                    <p>Введите поисковой запрос. Алгоритм проанализирует топ-30 страниц на наличие негативных оценок (ниже 4 баллов).</p>
+                </header>
+                
+                <div class="form-panel glass-panel">
+                    <form id="form-negative">
+                        <div class="input-group">
+                            <label for="negative-query">Кластер поисковых запросов (каждый с новой строки)</label>
+                            <textarea id="negative-query" rows="4" placeholder="отзывы о компании Весна&#10;компания весна развод&#10;весна спб негатив" required></textarea>
+                        </div>
+                        <button type="submit" class="primary-btn">Запустить поиск</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- MODULE NEGATIVE HISTORY: История негатива -->
+            <section id="module-negative-history" class="module-section">
+                <header class="section-header">
+                    <h1>История поиска негатива</h1>
+                    <p>Просмотр ранее выполненных запросов на поиск негативных отзывов.</p>
+                </header>
+                
+                <div class="history-container glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3>Сохраненные отчеты</h3>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button id="btn-load-negative-history" class="primary-btn" style="margin: 0; padding: 0.5rem 1rem; display: inline-flex; align-items: center; gap: 0.4rem;">🔄 Обновить</button>
+                        </div>
+                    </div>
+                    <div id="negative-history-list">
+                        <p class="empty-state" style="color: var(--text-muted);">Загрузка истории...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <div id="results-container" class="results-container glass-panel hidden">
+                <div class="results-header">
+                    <h2>Результаты</h2>
+                    <button id="close-results" class="close-btn">&times;</button>
+                </div>
+                <div id="loader" class="loader hidden">
+                    <div class="spinner"></div>
+                    <p>Выполняется парсинг, это может занять до минуты...</p>
+                </div>
+                <div id="results-content" class="results-content"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/static/app.js?v=4"></script>
+</body>
+</html>
